@@ -1,0 +1,47 @@
+{pkgs,...}:
+{
+  services.emacs.enable = true;
+
+  programs.emacs = {
+    enable = true;
+    package = pkgs.emacs;
+    # when in wayland, this can be nice:  package = pkgs.emacs30-pgtk;
+    extraConfig = ''
+      (setq blink-matching-paren nil)
+  (setq delete-pair-blink-delay 0.1) ; Emacs28 -- see `ef-simple-delete-pair-dwim'
+  (setq help-window-select t)
+  (setq next-error-recenter '(4)) ; center of the window
+  (setq find-library-include-other-files nil) ; Emacs 29
+  (setq remote-file-name-inhibit-delete-by-moving-to-trash t) ; Emacs 30
+  (setq remote-file-name-inhibit-auto-save t)                 ; Emacs 30
+  (setq tramp-connection-timeout (* 60 10)) ; seconds
+  (setq save-interprogram-paste-before-kill t)
+  (setq mode-require-final-newline 'visit-save)
+  (setq-default truncate-partial-width-windows nil)
+  (setq eval-expression-print-length nil)
+  (setq kill-do-not-save-duplicates t)
+  (setq duplicate-line-final-position -1 ; both are Emacs 29
+        duplicate-region-final-position -1)
+  (setq scroll-error-top-bottom t)
+(setq frame-title-format '("Emacs | %b"))
+  (setq echo-keystrokes-help nil) ; Emacs 30
+  (setq epa-keys-select-method 'minibuffer) ; Emacs 30
+(global-hl-line-mode)
+(display-time-mode 1)                             ; Enable time in the mode-line
+(global-subword-mode 1)                           ; Iterate through CamelCase words
+(show-paren-mode t)
+
+    '';
+    extraPackages = epkgs: [
+      epkgs.treesit-grammars.with-all-grammars
+      epkgs.vterm
+      epkgs.mu4e
+      epkgs.all-the-icons
+      epkgs.evil 
+      epkgs.evil-collection
+      epkgs.evil-commentary
+      epkgs.evil-goggles
+    ];
+  };
+
+}
